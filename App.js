@@ -18,6 +18,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import { Avatar, Badge, Icon, withBadge } from 'react-native-elements';
 
 const { width } = Dimensions.get('window');
 
@@ -35,9 +36,9 @@ class DotIndicator extends Component{
     let position = this.props.position;
 
     let opacity = position.interpolate({
-      inputRange: [i - 1, i, i + 1], // each dot will need to have an opacity of 1 when position is equal to their index (i)
-      outputRange: [0.2, 1, 0.2], // when position is not i, the opacity of the dot will animate to 0.3
-      extrapolate: 'clamp' // this will prevent the opacity of the dots from going outside of the outputRange (i.e. opacity will not be less than 0.3)
+      inputRange: [i - 1, i, i + 1],
+      outputRange: [0.2, 1, 0.2],
+      extrapolate: 'clamp'
     });
 
     return(
@@ -55,7 +56,7 @@ class ShoesList extends Component{
       <View style={{padding: 10}}>
         <View style={{height: 200, width: 150, backgroundColor: this.props.color}}></View>
         <TouchableOpacity 
-          onPress={() => ToastAndroid.show(this.props.shoeName, ToastAndroid.SHORT)}
+          onPress={() => this.props.func()}
           style={{flexDirection: 'row', padding: 10, backgroundColor: 'grey'}}
         >
           <View style={{height: 20, width: 20, backgroundColor: 'white'}}></View>
@@ -67,31 +68,62 @@ class ShoesList extends Component{
 }
 
 export default class App extends Component {
+  constructor(props){
+    super(props);
+    this.state={
+      cartItem: 0
+    }
+  }
+
   scrollX = new Animated.Value(0)
+
+  setCartItem(){
+    this.setState({cartItem: this.state.cartItem+1})
+  }
 
   render(){
     let position = Animated.divide(this.scrollX, width);
+    // const BadgedIcon = withBadge(this.state.cartItem)(Icon)
 
     return(
       <View>
-        <View style={{flexDirection: 'row', marginBottom: 10, height: '10%',borderWidth: 2}}>
-          <Text>burger</Text>
-          <Text>cart</Text>
+        <View style={{flexDirection: 'row', marginBottom: 10, height: '10%', justifyContent: 'space-between'}}>
+          <View style={{justifyContent:'center', height: 70, width: 70}}>
+            <Icon
+              type='Feather'
+              name='menu'
+            />
+          </View>
+          <View style={{paddingRight: 20, paddingTop: 20, justifyContent:'center', height: 50, width: 50}}>
+            {/* <BadgedIcon
+              type="EvilIcons"
+              name="shopping-cart"
+            /> */}
+            <Icon
+              type="EvilIcons"
+              name="shopping-cart"
+            />
+            <Badge
+              value={this.state.cartItem}
+              containerStyle={{ position: 'absolute', top: 10, right: 10 }}
+              status="error"
+            />
+          </View>
         </View>
 
         <Text style={{fontWeight: 'bold', fontSize: 24, paddingLeft: 20, marginBottom: 20, height: '5%'}}>Nike App Store</Text>
 
         <View style={{height: 100, marginBottom: 5}}>
-          <ScrollView 
-            horizontal={true} 
+          <ScrollView
+            horizontal={true}
             showsHorizontalScrollIndicator={false}
             pagingEnabled={true}
-            onScroll={Animated.event( // Animated.event returns a function that takes an array where the first element...
-              [{ nativeEvent: { contentOffset: { x: this.scrollX } } }] // ... is an object that maps any nativeEvent prop to a variable
-            )} // in this case we are mapping the value of nativeEvent.contentOffset.x to this.scrollX
-            scrollEventThrottle={16} // this will ensure that this ScrollView's onScroll prop is called no faster than 16ms between each function call
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { x: this.scrollX } } }]
+            )}
+            scrollEventThrottle={16}
             decelerationRate={0}
-            snapToInterval={315} //your element width
+            snapToInterval={315}
             snapToAlignment={"center"}
             style={{paddingLeft: 15}}
           >
@@ -104,9 +136,6 @@ export default class App extends Component {
         </View>
 
         <View style={{flexDirection: 'row',marginBottom: 20, height: 20, justifyContent: 'center'}}>
-          {/* <Animated.View style={{ height: 10, width: 10, backgroundColor: '#595959', marginHorizontal: 8, borderRadius: 5 }} />
-          <Animated.View style={{ height: 10, width: 10, backgroundColor: '#595959', marginHorizontal: 8, borderRadius: 5 }} />
-          <Animated.View style={{ height: 10, width: 10, backgroundColor: '#595959', marginHorizontal: 8, borderRadius: 5 }} /> */}
           <DotIndicator keyID={0} position={position}/>
           <DotIndicator keyID={1} position={position}/>
           <DotIndicator keyID={2} position={position}/>
@@ -114,9 +143,10 @@ export default class App extends Component {
 
         <View style={{height: '45%'}}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <ShoesList color={'purple'} shoeName={"Nike a"}/>
-            <ShoesList color={'blue'} shoeName={"aid ideas"}/>
-            <ShoesList color={'red'} shoeName={"wacky"}/>
+            <ShoesList color={'purple'} shoeName={"Nike a"} func={() => {this.setCartItem()}}/>
+            <ShoesList color={'green'} shoeName={"bata"} func={() => {this.setCartItem()}}/>
+            <ShoesList color={'blue'} shoeName={"aid ideas"} func={() => {this.setCartItem()}}/>
+            <ShoesList color={'red'} shoeName={"wacky"} func={() => {this.setCartItem()}}/>
           </ScrollView>
         </View>
         
