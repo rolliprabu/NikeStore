@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
   Animated,
   Dimensions,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,107 +14,21 @@ import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { ToastModule } from "./module"
 
+import BannerList from './App/Component/BannerList'
+import DotIndicator from './App/Component/DotIndicator'
+import ShoesList from './App/Component/ShoesList'
+import Fade from './App/Fade'
+
 const { width } = Dimensions.get('window');
-
-class BannerList extends Component{
-  render(){
-    return(
-      <View key={this.props.keyID} style={[{backgroundColor: this.props.color}, styles.banner]}></View>
-    )
-  }
-}
-
-class DotIndicator extends Component{  
-  render(){
-    let i = this.props.keyID;
-    let position = this.props.position;
-
-    let opacity = position.interpolate({
-      inputRange: [i - 1, i, i + 1],
-      outputRange: [0.2, 1, 0.2],
-      extrapolate: 'clamp'
-    });
-
-    return(
-      <Animated.View
-        key={this.props.keyID}
-        style={[{opacity}, styles.dotIndicator]}
-      />
-    )
-  }
-}
-
-class ShoesList extends Component{
-  render(){
-    return (
-      <View style={{padding: 10}}>
-        <View style={{height: 200, width: 150, backgroundColor: this.props.color}}></View>
-        <TouchableOpacity 
-          onPress={() => this.props.func()}
-          style={{flexDirection: 'row', padding: 10, backgroundColor: 'grey'}}
-        >
-          <Icon
-            type='antdesign'
-            name='plussquareo'
-            color='white'
-          />
-          <Text style={{paddingLeft: 10, color: 'white'}}>{this.props.shoeName}</Text>
-        </TouchableOpacity>
-      </View>      
-    )
-  }
-}
-
-class Fade extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      visible: props.visible,
-    };
-  };
-
-  componentWillMount() {
-    this._visibility = new Animated.Value(this.props.visible ? 1 : 0);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.visible) {
-      this.setState({ visible: true });
-    }
-    Animated.timing(this._visibility, {
-      toValue: nextProps.visible ? 1 : 0,
-      duration: 75,
-    }).start(() => {
-      this.setState({ visible: nextProps.visible });
-    });
-  }
-
-  render() {
-    const { visible, style, children, ...rest } = this.props;
-
-    const containerStyle = {
-      opacity: this._visibility.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1],
-      }),
-      transform: [
-        {
-          scale: this._visibility.interpolate({
-            inputRange: [0, 1],
-            outputRange: [1.1, 1],
-          }),
-        },
-      ],
-    };
-
-    const combinedStyle = [containerStyle, style];
-    return (
-      <Animated.View style={this.state.visible ? combinedStyle : containerStyle} {...rest}>
-        {this.state.visible ? children : null}
-      </Animated.View>
-    );
-  }
-}
+const images = {
+  banner1: require('./Image/banner1.jpg'),
+  banner2: require('./Image/banner2.jpg'),
+  banner3: require('./Image/banner3.jpg'),
+  shoes1: require('./Image/shoes1.jpg'),
+  shoes2: require('./Image/shoes2.png'),
+  shoes3: require('./Image/shoes3.png'),
+  shoes4: require('./Image/shoes4.png'),
+};
 
 class App extends Component {
   constructor(props){
@@ -182,9 +97,9 @@ class App extends Component {
             snapToAlignment={"center"}
             style={{paddingLeft: 15}}
           >
-            <BannerList keyID={0} color={'red'}/>
-            <BannerList keyID={1} color={'purple'}/>
-            <BannerList keyID={2} color={'green'}/>
+            <BannerList keyID={0} imgSrc={images.banner1}/>
+            <BannerList keyID={1} imgSrc={images.banner2}/>
+            <BannerList keyID={2} imgSrc={images.banner3}/>
 
             <View style={{width: 30}}></View>
           </ScrollView>
@@ -198,10 +113,10 @@ class App extends Component {
 
         <View style={{height: '45%'}}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <ShoesList color={'purple'} shoeName={"Nike Vapormax"} func={() => {this.setCartItem("Nike Vapormax")}}/>
-            <ShoesList color={'green'} shoeName={"Nike Airmax"} func={() => {this.setCartItem("Nike Airmax")}}/>
-            <ShoesList color={'blue'} shoeName={"Nike Mercurial"} func={() => {this.setCartItem("Nike Mercurial")}}/>
-            <ShoesList color={'red'} shoeName={"Nike Metcon"} func={() => {this.setCartItem("Nike Metcon")}}/>
+            <ShoesList imgSrc={images.shoes1} shoeName={"Nike Vapormax"} func={() => {this.setCartItem("Nike Vapormax")}}/>
+            <ShoesList imgSrc={images.shoes2} shoeName={"Nike Airmax"} func={() => {this.setCartItem("Nike Airmax")}}/>
+            <ShoesList imgSrc={images.shoes3} shoeName={"Nike Mercurial"} func={() => {this.setCartItem("Nike Mercurial")}}/>
+            <ShoesList imgSrc={images.shoes4} shoeName={"Nike Metcon"} func={() => {this.setCartItem("Nike Metcon")}}/>
           </ScrollView>
         </View>
 
@@ -237,18 +152,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     marginBottom: 20,
     height: '5%'
-  },
-  banner: {
-    height: 100,
-    width: 300,
-    marginHorizontal: 15
-  },
-  dotIndicator: {
-    height: 10,
-    width: 10,
-    backgroundColor: '#595959',
-    marginHorizontal: 8,
-    borderRadius: 5
   }
 });
 
