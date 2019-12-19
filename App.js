@@ -18,6 +18,8 @@ import {
   View
 } from 'react-native';
 import { Badge, Icon } from 'react-native-elements';
+import { createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { ToastModule } from "./module"
 
 const { width } = Dimensions.get('window');
@@ -122,7 +124,7 @@ class Fade extends Component {
   }
 }
 
-export default class App extends Component {
+class App extends Component {
   constructor(props){
     super(props);
     this.state={
@@ -192,7 +194,7 @@ export default class App extends Component {
             <BannerList keyID={0} color={'red'}/>
             <BannerList keyID={1} color={'purple'}/>
             <BannerList keyID={2} color={'green'}/>
-            
+
             <View style={{width: 30}}></View>
           </ScrollView>
         </View>
@@ -211,8 +213,27 @@ export default class App extends Component {
             <ShoesList color={'red'} shoeName={"Nike Metcon"} func={() => {this.setCartItem("Nike Metcon")}}/>
           </ScrollView>
         </View>
-        
 
+      </View>
+    )
+  }
+}
+
+class Favourite extends Component {
+  render(){
+    return(
+      <View>
+        <Text>fav screen</Text>
+      </View>
+    )
+  }
+}
+
+class Account extends Component {
+  render(){
+    return(
+      <View>
+        <Text>acc screen</Text>
       </View>
     )
   }
@@ -239,3 +260,37 @@ const styles = StyleSheet.create({
     borderRadius: 5
   }
 });
+
+const TabNavigator = createBottomTabNavigator(
+  {
+  Home: App,
+  Favourite: Favourite,
+  Account: Account
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+        
+        let iconName;
+        if (routeName === 'Home') {
+          iconName = `${focused ? 'home' : 'home-outline'}`;
+        } else if (routeName === 'Favourite') {
+          iconName = `${focused ? 'heart' : 'heart-outline'}`;
+        } else if (routeName === 'Account') {
+          iconName = `${focused ? 'account' : 'account-outline'}`;
+          
+        }
+
+        return <Icon type='material-community' name={iconName}/>
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: 'black',
+      inactiveTintColor: 'gray',
+      style:{height:75}
+    },
+  }
+);
+
+export default createAppContainer(TabNavigator);
