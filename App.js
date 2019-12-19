@@ -205,10 +205,10 @@ export default class App extends Component {
 
         <View style={{height: '45%'}}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <ShoesList color={'purple'} shoeName={"Nike a"} func={() => {this.setCartItem("nike a")}}/>
-            <ShoesList color={'green'} shoeName={"bata"} func={() => {this.setCartItem("bata")}}/>
-            <ShoesList color={'blue'} shoeName={"aid ideas"} func={() => {this.setCartItem("aid ideas")}}/>
-            <ShoesList color={'red'} shoeName={"wacky"} func={() => {this.setCartItem("wacky")}}/>
+            <ShoesList color={'purple'} shoeName={"Nike Vapormax"} func={() => {this.setCartItem("Nike Vapormax")}}/>
+            <ShoesList color={'green'} shoeName={"Nike Airmax"} func={() => {this.setCartItem("Nike Airmax")}}/>
+            <ShoesList color={'blue'} shoeName={"Nike Mercurial"} func={() => {this.setCartItem("Nike Mercurial")}}/>
+            <ShoesList color={'red'} shoeName={"Nike Metcon"} func={() => {this.setCartItem("Nike Metcon")}}/>
           </ScrollView>
         </View>
         
