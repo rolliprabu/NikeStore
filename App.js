@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
 import {
   Animated,
@@ -13,7 +5,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -263,9 +254,9 @@ const styles = StyleSheet.create({
 
 const TabNavigator = createBottomTabNavigator(
   {
-  Home: App,
-  Favourite: Favourite,
-  Account: Account
+    Home: App,
+    Favourite: Favourite,
+    Account: Account
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -278,8 +269,7 @@ const TabNavigator = createBottomTabNavigator(
         } else if (routeName === 'Favourite') {
           iconName = `${focused ? 'heart' : 'heart-outline'}`;
         } else if (routeName === 'Account') {
-          iconName = `${focused ? 'account' : 'account-outline'}`;
-          
+          iconName = `${focused ? 'account' : 'account-outline'}`;          
         }
 
         return <Icon type='material-community' name={iconName}/>
